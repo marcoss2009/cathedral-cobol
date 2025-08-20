@@ -1,0 +1,7 @@
+*
+!cuentas/.gitkeep
+!*.cbl
+!*.cob
+!*.cpy
+!README.md
+!.gitignore
