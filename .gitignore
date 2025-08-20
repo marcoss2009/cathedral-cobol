@@ -9,3 +9,5 @@ cuentas/*.dat
 !*.cpy
 !README.md
 !.gitignore
+/cuentas.dat
+/contador.dat
