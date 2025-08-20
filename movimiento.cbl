@@ -12,9 +12,13 @@
                ORGANIZATION IS LINE SEQUENTIAL
                FILE STATUS IS WS-FILE-STATUS.
 
-           SELECT ARCHIVO-TEMP ASSIGN TO 'temp.dat'
+      *    Archivo de movimientos de la cuenta individual
+      *    Inicialmente lo abrimos en una instancia dinámica
+      *    Y luego le asignamos el nombre cuentas/<LK-CUENTA>.dat
+           SELECT ARCHIVO-MOVIMIENTOS
+           ASSIGN TO DYNAMIC NOMBRE-ARCHIVO-MOV
                ORGANIZATION IS LINE SEQUENTIAL
-               FILE STATUS IS WS-FILE-STATUS.
+               FILE STATUS IS WS-FILE-STATUS-MOV.
 
        DATA DIVISION.
        FILE SECTION.
@@ -22,16 +26,18 @@
            01  RCC.
            COPY "cuenta.cpy".
 
-       FD  ARCHIVO-TEMP.
-           01 RCC-TEMP.
-           COPY "cuenta.cpy".
-
+       FD  ARCHIVO-MOVIMIENTOS.
+           01 REGISTRO-MOVIMIENTO.
+               COPY "movimientos.cpy".
 
        WORKING-STORAGE SECTION.
        01  WS-FILE-STATUS        PIC XX VALUE '00'.
 
        01  WS-EOF-FLAG           PIC X(01) VALUE 'N'.
            88 FIN-ARCHIVO        VALUE 'Y'.
+
+       01  WS-FILE-STATUS-MOV   PIC XX VALUE '00'.
+       01  NOMBRE-ARCHIVO-MOV   PIC X(100).
 
        01  CUENTA-ENCONTRADA     PIC X(01) VALUE 'N'.
 
@@ -49,7 +55,7 @@
 
            100-ACTUALIZAR-CUENTA SECTION.
       *    Abrimos el archivo y buscamos la cuenta
-               OPEN INPUT ARCHIVO-CUENTAS.
+               OPEN I-O ARCHIVO-CUENTAS.
                PERFORM UNTIL FIN-ARCHIVO
                    READ ARCHIVO-CUENTAS INTO RCC
                        AT END
@@ -61,7 +67,17 @@
                            END-IF
                    END-READ
                END-PERFORM.
-               CLOSE ARCHIVO-CUENTAS.
+               
+      *    Asignamos el archivo de la cuenta para escribir el movimiento
+           STRING 
+               "cuentas/" DELIMITED BY SIZE
+               LK-CUENTA DELIMITED BY SIZE
+               ".dat" DELIMITED BY SIZE
+               INTO NOMBRE-ARCHIVO-MOV
+           END-STRING.
+
+      *    Abrimos el archivo de movimientos de la cuenta LK-CUENTA
+           OPEN EXTEND ARCHIVO-MOVIMIENTOS.
 
       *    En teoría la cuenta ya está validada...
       *    Y el saldo tambien...
@@ -77,47 +93,29 @@
                 END-EVALUATE.
 
            110-REALIZAR-DEPOSITO SECTION.
-               OPEN INPUT ARCHIVO-CUENTAS
-                OUTPUT ARCHIVO-TEMP.
+               ADD LK-MONTO TO CC-SALDO OF RCC
 
-               PERFORM UNTIL FIN-ARCHIVO
-                   READ ARCHIVO-CUENTAS INTO RCC
-                       AT END
-                           SET FIN-ARCHIVO TO TRUE
-                       NOT AT END
-                           IF LK-CUENTA = CC-NUMERO-CUENTA OF RCC
-                               ADD LK-MONTO TO CC-SALDO OF RCC
-                           END-IF
-                           WRITE RCC-TEMP FROM RCC
-                   END-READ
-               END-PERFORM.
-      
-               CLOSE ARCHIVO-CUENTAS
-                     ARCHIVO-TEMP.
-      *    Actualizamos cuentas.dat con el contenido de temp.dat   
-               CALL "SYSTEM" USING "mv temp.dat cuentas.dat".
+               MOVE 'H' TO TIPO-MOVIMIENTO OF REGISTRO-MOVIMIENTO.
+               MOVE LK-MONTO TO MONTO OF REGISTRO-MOVIMIENTO.
+
+               MOVE FUNCTION CURRENT-DATE
+               TO FECHA-MOVIMIENTO OF REGISTRO-MOVIMIENTO.
 
            120-REALIZAR-RETIRO SECTION.
-               OPEN INPUT ARCHIVO-CUENTAS
-                OUTPUT ARCHIVO-TEMP.
+               SUBTRACT LK-MONTO FROM CC-SALDO OF RCC
 
-               PERFORM UNTIL FIN-ARCHIVO
-                   READ ARCHIVO-CUENTAS INTO RCC
-                       AT END
-                           SET FIN-ARCHIVO TO TRUE
-                       NOT AT END
-                           IF LK-CUENTA = CC-NUMERO-CUENTA OF RCC
-                               SUBTRACT LK-MONTO FROM CC-SALDO OF RCC
-                           END-IF
-                           WRITE RCC-TEMP FROM RCC
-                   END-READ
-               END-PERFORM.
-      
-               CLOSE ARCHIVO-CUENTAS
-                     ARCHIVO-TEMP.
-      *    Actualizamos cuentas.dat con el contenido de temp.dat   
-               CALL "SYSTEM" USING "mv temp.dat cuentas.dat".
+               MOVE 'D' TO TIPO-MOVIMIENTO OF REGISTRO-MOVIMIENTO.
+               MOVE LK-MONTO TO MONTO OF REGISTRO-MOVIMIENTO.
 
+               MOVE FUNCTION CURRENT-DATE
+               TO FECHA-MOVIMIENTO OF REGISTRO-MOVIMIENTO.
 
            900-FINALIZAR-PROGRAMA SECTION.
+      *        Escribimos los cambios y cerramos los archivos
+               REWRITE RCC.
+               CLOSE ARCHIVO-CUENTAS.
+
+               WRITE REGISTRO-MOVIMIENTO.
+               CLOSE ARCHIVO-MOVIMIENTOS.
+
                EXIT PROGRAM.

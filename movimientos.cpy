@@ -4,7 +4,7 @@
            05    TIPO-MOVIMIENTO PIC X VALUE 'D'.
                  88 DEBE      VALUE 'D'.
                  88 HABER     VALUE 'H'.
-      *  Fecha en formato YYYY-MM-DD
-           05    FECHA-MOVIMIENTO  PIC X(10).
+      *  Fecha en formato YYYYMMDDHHMMSS
+           05    FECHA-MOVIMIENTO  PIC X(14).
       *  Futuros parametros: OPERADOR, CANAL
       

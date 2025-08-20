@@ -1,5 +1,9 @@
 *
+cuentas/*.dat
+!cuentas/
 !cuentas/.gitkeep
+!contador.dat
+!cuentas.dat
 !*.cbl
 !*.cob
 !*.cpy
