@@ -130,4 +130,4 @@
                DISPLAY "Saldo actual: " WS-SALDO-DISPLAY.
 
            900-FINALIZAR-PROGRAMA SECTION.
-               STOP RUN.
+               EXIT PROGRAM.

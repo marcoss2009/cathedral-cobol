@@ -74,13 +74,8 @@
                READ ARCHIVO-CONTADOR INTO REGISTRO-CONTADOR
                END-READ.
 
-               DISPLAY CONTADOR-CUENTA OF REGISTRO-CONTADOR.
-
-      *        Le sumamos uno y guardamos los cambios en el archivo
-      *        contador
+      *        Le sumamos uno
                ADD 1 TO CONTADOR-CUENTA OF REGISTRO-CONTADOR.
-
-               DISPLAY CONTADOR-CUENTA OF REGISTRO-CONTADOR.
 
       *        Ojo, usamos REWRITE, no WRITE, ya que se mantiene
       *        el mismo registro
@@ -106,11 +101,10 @@
                IF WS-FILE-STATUS-MOV NOT = '00'
                    DISPLAY "ERROR AL CREAR ARCHIVO DE MOVIMIENTOS"
                ELSE
-                   DISPLAY "ARCHIVO DE MOVIMIENTOS CREADO CORRECTAMENTE"
-               END-IF
-               CLOSE ARCHIVO-MOVIMIENTOS
+                   DISPLAY 'Cuenta creada correctamente'
+                   DISPLAY 'Número de Cuenta: ' CC-NUMERO-CUENTA
+               END-IF.
+               CLOSE ARCHIVO-MOVIMIENTOS.
       
-               DISPLAY 'Cuenta creada correctamente'.
-
            900-FINALIZAR-PROGRAMA SECTION.
-               STOP RUN.
+               EXIT PROGRAM.

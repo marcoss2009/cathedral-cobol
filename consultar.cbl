@@ -11,22 +11,22 @@
 
        PROCEDURE DIVISION.
        000-MAIN-LOGIC SECTION.
-           DISPLAY 'Programa CONSULTAR-CUENTA iniciado.'.
-           CALL 'BUSCAR-CUENTA' USING CCB.
+           PERFORM 100-CONSULTAR-CUENTA.
+           PERFORM 900-FINALIZAR-PROGRAMA.
 
-           MOVE CC-SALDO OF CCB TO WS-SALDO-DISPLAY.
+           100-CONSULTAR-CUENTA SECTION.
+               DISPLAY '==== Consulta de Cuenta ===='.
+               CALL 'BUSCAR-CUENTA' USING CCB.
+      
+               MOVE CC-SALDO OF CCB TO WS-SALDO-DISPLAY.
 
-           DISPLAY SPACE.
-           DISPLAY '------------------------------------'.
-           DISPLAY '  DETALLES DE LA CUENTA ENCONTRADA  '.
-           DISPLAY '------------------------------------'.
-           DISPLAY 'Número de Cuenta: ' CC-NUMERO-CUENTA OF CCB.
-           DISPLAY 'Nombre Cliente:   ' CC-NOMBRE-CLIENTE OF CCB.
-           DISPLAY 'Saldo:            ' WS-SALDO-DISPLAY.
-           DISPLAY 'Estado:           ' CC-ESTADO-CUENTA OF CCB.
-           DISPLAY '------------------------------------'.
-           DISPLAY SPACE.
+               DISPLAY '------------------------------------'.
+               DISPLAY '          DETALLE DE CUENTA         '.
+               DISPLAY '------------------------------------'.
+               DISPLAY 'Número de Cuenta: ' CC-NUMERO-CUENTA OF CCB.
+               DISPLAY 'Nombre Cliente:   ' CC-NOMBRE-CLIENTE OF CCB.
+               DISPLAY 'Saldo:            ' WS-SALDO-DISPLAY.
+               DISPLAY 'Estado:           ' CC-ESTADO-CUENTA OF CCB.
 
-           STOP RUN.
-
-       END PROGRAM CONSULTAR-CUENTA.
+           900-FINALIZAR-PROGRAMA SECTION.
+               EXIT PROGRAM.

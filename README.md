@@ -1,5 +1,5 @@
 # Cathedral COBOL
-Mi curiosidad como programador siempre fue el lenguaje COBOL, comenzando dicha curiosidad en mis tiempos de la escuela secundaria cuando dos profesores (Daniel Salem y Alejandra Gil, que por cierto, son dos profesores que me marcaron muchisimo durante mi preparación profesional) me plantaron esa curiosidad cuando en clases mencionaban cómo habían trabajado con dicho lenguaje durante muchos años y como hablaban apasionadamente sobre él.
+Mi curiosidad como programador siempre fue el lenguaje COBOL, comenzando dicha curiosidad en mis tiempos de secundaria cuando dos profesores (Salem, Daniel y Gil, Alejandra) me plantaron esa curiosidad cuando en clases mencionaban cómo habían trabajado con dicho lenguaje durante muchos años y como hablaban apasionadamente sobre él.
 
 Desde entonces siempre tuve la idea de algún día sentarme a aprender dicho lenguaje, el tiempo pasó y nunca tenía tiempo o paciencia para hacerlo, hasta este año que logré encontrar un pequeño hueco en mis tiempos libres para comenzar con pequeñas bases sobre este lenguaje.
 
@@ -11,13 +11,11 @@ Mi objetivo, además de aprender COBOL, es también aprender como funcionan esto
 
 Este repositorio se lo voy a pasar a los únicos dos programadores que conozco que me pueden llegar a dar una review sobre el código y la forma en la que encaré estos programas, por lo que estoy abierto a cualquier crítica constructiva.
 
-## Notas
-Voy a utilizar GNU COBOL como compilador.
+## Compilación
+Voy a utilizar GNU COBOL como compilador. Dejo un pequeño *script* para poder compilar sin problemas.
 
-Comando para compilar un módulo
+    sh compile.sh
 
-    cobc -c buscar.cbl
+El programa principal a ejecutar es *cathedral*.
 
-Comando para compilar un programa principal con un módulo
-
-    cobc -x consultar.cbl buscar.o -Icrud
+    ./cathedral
