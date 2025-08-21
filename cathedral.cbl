@@ -35,4 +35,6 @@
                END-PERFORM.
 
            900-FINALIZAR-PROGRAMA SECTION.
+               DISPLAY "======== Cathedral Software ========".
+               DISPLAY "                                   π".
                STOP RUN.

@@ -19,3 +19,5 @@ Voy a utilizar GNU COBOL como compilador. Dejo un pequeño *script* para poder c
 El programa principal a ejecutar es *cathedral*.
 
     ./cathedral
+
+*[π](https://www.youtube.com/watch?v=vlCnSYSsAHE)*
